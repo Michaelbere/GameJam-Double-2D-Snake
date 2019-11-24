@@ -49,15 +49,21 @@ public class SnakeHeadScript : SnakeBodyScript
         return Flip.NO_FLIP;
     }
 
-    IEnumerator DelayedMove(Vector3 newPosition, float delay, bool isLast)
+    IEnumerator DelayedResetFlip(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        flip = Flip.NO_FLIP;
+    }
+
+    IEnumerator DelayedMove(Vector3[] newPositions, float delay)
     {
         // Debug.Log("DelayedMove called with " + newPosition.ToString());
-        yield return new WaitForSeconds(delay);
         // Debug.Log("DelayedMove ended with " + newPosition.ToString());
-        move(newPosition, false);
-        if (isLast)
+        for (int i = 0; i < newPositions.Length; ++i)
         {
-            flip = Flip.NO_FLIP;
+            move(newPositions[i], false);
+            Debug.Log(newPositions[i]);
+            yield return new WaitForSeconds(delay);
         }
     }
 
@@ -80,7 +86,7 @@ public class SnakeHeadScript : SnakeBodyScript
                 Vector3.forward : Vector3.back);
                 break;
         }
-        answer[3] = answer[2];
+        // answer[3] = answer[2];
         return answer;
     }
 
@@ -93,7 +99,8 @@ public class SnakeHeadScript : SnakeBodyScript
     void Update()
     {
         snakeMoveTimer -= Time.deltaTime;
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             didEat = true;
         }
         if (Input.GetKey(KeyCode.LeftArrow) && direction != PlayerDirection.RIGHT)
@@ -112,58 +119,60 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             direction = PlayerDirection.UP;
         }
-        if (snakeMoveTimer < 0 && flip == Flip.NO_FLIP)
+        if (snakeMoveTimer < 0)
         {
             snakeMoveTimer += snakeSpeed; // check that this doesnt fail in any way
                                           //(the idea is that if it is too low the
                                           //time passed will go on to the next cycle
                                           // to keep cycle length consistant)
-            Vector3 newPosition;
-            switch (direction)
+            if (flip == Flip.NO_FLIP)
             {
-                case PlayerDirection.UP:
-                    newPosition = transform.localPosition + Vector3.forward * verticalMultiplier;
-                    break;
-                case PlayerDirection.DOWN:
-                    newPosition = transform.localPosition + Vector3.back * verticalMultiplier;
-                    break;
-                case PlayerDirection.RIGHT:
-                    newPosition = transform.localPosition + Vector3.right * horizontalMultiplier;
-                    break;
-                case PlayerDirection.LEFT:
-                    newPosition = transform.localPosition + Vector3.left * horizontalMultiplier;
-                    break;
-                default:
-                    newPosition = transform.localPosition;
-                    break;
-            }
-            flip = calculateFlip(newPosition);
-            if (flip != Flip.NO_FLIP)
-            {
-                Debug.Log(flip);
-                board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
-                Vector3[] positionSteps = calculatePositionSteps(newPosition, flip);
-                switch (flip)
+                Vector3 newPosition;
+                switch (direction)
                 {
-                    case Flip.LEFT:
-                    case Flip.RIGHT:
-                        horizontalMultiplier = horizontalMultiplier * -1;
+                    case PlayerDirection.UP:
+                        newPosition = transform.localPosition + Vector3.forward * verticalMultiplier;
                         break;
-                    case Flip.UP:
-                    case Flip.DOWN:
-                        verticalMultiplier = verticalMultiplier * -1;
+                    case PlayerDirection.DOWN:
+                        newPosition = transform.localPosition + Vector3.back * verticalMultiplier;
+                        break;
+                    case PlayerDirection.RIGHT:
+                        newPosition = transform.localPosition + Vector3.right * horizontalMultiplier;
+                        break;
+                    case PlayerDirection.LEFT:
+                        newPosition = transform.localPosition + Vector3.left * horizontalMultiplier;
+                        break;
+                    default:
+                        newPosition = transform.localPosition;
                         break;
                 }
-                StartCoroutine(DelayedMove(positionSteps[0], snakeSpeed * 0, false));
-                StartCoroutine(DelayedMove(positionSteps[1], snakeSpeed * 1, false));
-                StartCoroutine(DelayedMove(positionSteps[2], snakeSpeed * 2, false));
-                StartCoroutine(DelayedMove(positionSteps[3], snakeSpeed * 3, true));
-            }
-            else
-            {
-                // TODO add method to check if eaten and send instead of false
-                move(newPosition,didEat);
-                didEat = false;
+                flip = calculateFlip(newPosition);
+                if (flip != Flip.NO_FLIP)
+                {
+                    Debug.Log(flip);
+                    board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
+                    Vector3[] positionSteps = calculatePositionSteps(newPosition, flip);
+                    switch (flip)
+                    {
+                        case Flip.LEFT:
+                        case Flip.RIGHT:
+                            horizontalMultiplier = horizontalMultiplier * -1;
+                            break;
+                        case Flip.UP:
+                        case Flip.DOWN:
+                            verticalMultiplier = verticalMultiplier * -1;
+                            break;
+                    }
+                    StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
+                    StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
+                }
+                else
+                {
+                    // TODO add method to check if eaten and send instead of false
+                    Debug.Log("Move was called");
+                    move(newPosition, didEat);
+                    didEat = false;
+                }
             }
         }
     }
