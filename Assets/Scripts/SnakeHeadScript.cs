@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
+using Quaternion = System.Numerics.Quaternion;
 
 public class SnakeHeadScript : SnakeBodyScript
 {
@@ -150,8 +153,8 @@ public class SnakeHeadScript : SnakeBodyScript
                 if (flip != Flip.NO_FLIP)
                 {
                     Debug.Log(flip);
-                    board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     Vector3[] positionSteps = calculatePositionSteps(newPosition, flip);
+                    board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     switch (flip)
                     {
                         case Flip.LEFT:
@@ -169,11 +172,30 @@ public class SnakeHeadScript : SnakeBodyScript
                 else
                 {
                     // TODO add method to check if eaten and send instead of false
-                    Debug.Log("Move was called");
+//                    Debug.Log("Move was called");
                     move(newPosition, didEat);
                     didEat = false;
                 }
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision target)  // not working yet
+    {
+        if (target.gameObject.CompareTag("Body"))
+        {
+            Debug.Log("Touch Body");
+            Time.timeScale = 0f;
+        }
+    }
+
+    private void OnTriggerEnter(Collider target)
+    {
+        if (target.gameObject.CompareTag("Fruit"))
+        {
+//            Debug.Log("Eat Fruit");
+//            target.gameObject.SetActive(false);
+            didEat = true;
         }
     }
 }
