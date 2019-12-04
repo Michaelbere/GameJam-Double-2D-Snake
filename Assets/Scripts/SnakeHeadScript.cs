@@ -68,7 +68,7 @@ public class SnakeHeadScript : SnakeBodyScript
         for (int i = 0; i < newPositions.Length; ++i)
         {
             move(newPositions[i], false);
-            Debug.Log(newPositions[i]);
+//            Debug.Log(newPositions[i]);
             yield return new WaitForSeconds(delay);
         }
     }
@@ -153,6 +153,7 @@ public class SnakeHeadScript : SnakeBodyScript
                         newPosition = transform.localPosition;
                         break;
                 }
+                checkDeath(newPosition);
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 {
@@ -175,7 +176,7 @@ public class SnakeHeadScript : SnakeBodyScript
                 }
                 else
                 {
-                    // TODO add method to check if eaten and send instead of false
+                    // TODO add method to check if eaten and send instead of false - fixed: collision handles that
 //                    Debug.Log("Move was called");
                     move(newPosition, didEat);
                     didEat = false;
@@ -184,12 +185,20 @@ public class SnakeHeadScript : SnakeBodyScript
         }
     }
 
-    private void OnCollisionEnter(Collision target)  // not working yet
+    private void checkDeath(Vector3 newPosition)  // not working yet
     {
-        if (target.gameObject.CompareTag("Body"))
+        float x = 0.1f;
+        float y = 0.1f;
+        float z = 0.1f;
+        var checkResult = Physics.OverlapBox(newPosition, (transform.localScale / 2) - new Vector3(x,y,z));
+        for (int i = 0; i < checkResult.Length; i++)
         {
-            Debug.Log("Touch Body");
-            Time.timeScale = 0f;
+            Debug.Log("Touch " + checkResult[i].gameObject.tag);
+            if (checkResult[i].gameObject.CompareTag("Body"))
+            {
+                Debug.Log("Touch Body");
+                Time.timeScale = 0f;
+            }
         }
     }
 

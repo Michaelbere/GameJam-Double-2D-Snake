@@ -6,6 +6,8 @@ using DG.Tweening;
 public class BoardFlippingScript : MonoBehaviour
 {
     public Transform snakeHead;
+
+    private bool sunnySideUp = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,12 +17,13 @@ public class BoardFlippingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
 
     public void flip(SnakeHeadScript.Flip flip, float duration)
     {
+        sunnySideUp = !sunnySideUp;
         switch (flip)
         {
             case SnakeHeadScript.Flip.LEFT:
@@ -36,5 +39,10 @@ public class BoardFlippingScript : MonoBehaviour
                 transform.DOLocalRotate(Vector3.right * 180, duration, mode:RotateMode.LocalAxisAdd);
                 break;
         }
+    }
+
+    public bool isSunnySideUp()
+    {
+        return sunnySideUp;
     }
 }
