@@ -9,8 +9,8 @@ public class FruitScript : MonoBehaviour
     private int minX, minZ, maxX, maxZ;
     private float radius;
 
-    private float expireTime = 5f;
-    private float expiryTimer = 0f;
+    public float expireTime = 15f;
+    private float expiryCounter = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,18 +25,26 @@ public class FruitScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        expiryTimer += Time.deltaTime;
-        if (expiryTimer > expireTime)
+        expiryCounter += Time.deltaTime;
+        if (expiryCounter > expireTime)
         {
-            expiryTimer = 0;
+            expiryCounter = 0;
             getNewLocation();
         }
     }
 
     private void getNewLocation(Collider target=null)
     {
-        float newX = Random.Range(minX, maxX) + radius;
-        float newZ = Random.Range(minZ, maxZ) + radius;
+        Collider[] checkResult;
+        float newX;
+        float newZ;
+        do
+        {
+            newX = Random.Range(minX, maxX) + radius;
+            newZ = Random.Range(minZ, maxZ) + radius;
+            checkResult = Physics.OverlapSphere(new Vector3(newX, transform.localPosition.y, newZ), 0.49f);
+        } while (checkResult.Length != 0);
+        
         transform.localPosition = new Vector3(newX, transform.localPosition.y , newZ);
     } 
     
@@ -44,8 +52,9 @@ public class FruitScript : MonoBehaviour
     {
         if (target.gameObject.CompareTag("Head"))
         {
-            getNewLocation(target);
             Debug.Log("Eated");
+            expiryCounter = 0;
+            getNewLocation(target);
         }
     }
 }

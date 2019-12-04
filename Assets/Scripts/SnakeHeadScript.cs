@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using UnityEngine;
+using UnityEngine.UI;
 using Quaternion = System.Numerics.Quaternion;
 
 public class SnakeHeadScript : SnakeBodyScript
@@ -11,6 +12,8 @@ public class SnakeHeadScript : SnakeBodyScript
     [Range(0.1f, 2)]
     public float snakeSpeed = 0.5f;
     public Transform board;
+    public Text scoreText;
+    private int score = 0;
     private float snakeMoveTimer;
 
     private bool didEat = false;
@@ -96,6 +99,7 @@ public class SnakeHeadScript : SnakeBodyScript
     void Start()
     {
         snakeMoveTimer = snakeSpeed;
+        setScoreText();
     }
 
     // Update is called once per frame
@@ -193,9 +197,16 @@ public class SnakeHeadScript : SnakeBodyScript
     {
         if (target.gameObject.CompareTag("Fruit"))
         {
-//            Debug.Log("Eat Fruit");
-//            target.gameObject.SetActive(false);
+            score += 1;
             didEat = true;
+            setScoreText();
         }
     }
+
+    void setScoreText()
+    {
+        scoreText.text = "Score: " + score;
+    }
+    
+    
 }

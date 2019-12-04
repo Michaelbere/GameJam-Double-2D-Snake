@@ -28,6 +28,8 @@ public class SnakeBodyScript : MonoBehaviour
     {
         Vector3 oldPosition = transform.localPosition;
         transform.localPosition = newPosition;
+        Vector3 relativePos = newPosition - oldPosition;
+        transform.rotation = Quaternion.LookRotation(relativePos, Vector3.up);
         if (isTail())
         {
             if(didEat){
