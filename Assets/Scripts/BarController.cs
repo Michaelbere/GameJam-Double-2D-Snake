@@ -56,7 +56,7 @@ public class BarLogic
 {
     private const int MaxAmount = 100;
     private float _currentAmount;
-    private const float _updateAmount = 10;
+    private const float Growth = 10; // Change this to change fill speed
 
     public BarLogic(float currentAmount)
     {
@@ -74,14 +74,14 @@ public class BarLogic
         {
             if (_currentAmount < MaxAmount)
             {
-                _currentAmount += _updateAmount * Time.deltaTime;
+                _currentAmount += Growth * Time.deltaTime;
             }
         }
         else
         {
             if (_currentAmount > 0)
             {
-                _currentAmount -= _updateAmount * Time.deltaTime;
+                _currentAmount -= Growth * Time.deltaTime;
             }
         }
     }
