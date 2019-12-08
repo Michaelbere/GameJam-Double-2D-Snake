@@ -7,6 +7,10 @@ public class SnakeBodyScript : MonoBehaviour
 
     public Transform prevBodyPart;
     public Transform nextBodyPart;
+    
+    private bool _flashing = false;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +20,7 @@ public class SnakeBodyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+      
     }
 
     protected bool isTail()
@@ -43,5 +47,18 @@ public class SnakeBodyScript : MonoBehaviour
         {
             nextBodyPart.GetComponent<SnakeBodyScript>().move(oldPosition, didEat);
         }
+    }
+
+    IEnumerator Flash(Color original, Color newColor, float flashTime)
+    {
+        MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        Color flashColor = newColor;
+        while (_flashing)
+        {
+            meshRenderer.material.color = newColor;
+            yield return new WaitForSeconds(flashTime);
+            flashColor = (flashColor == original) ? newColor : original;
+        }
+        meshRenderer.material.color = original;
     }
 }

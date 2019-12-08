@@ -99,26 +99,7 @@ public class SnakeHeadScript : SnakeBodyScript
     void Update()
     {
         snakeMoveTimer -= Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            didEat = true;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow) && direction != PlayerDirection.RIGHT)
-        {
-            direction = PlayerDirection.LEFT;
-        }
-        if (Input.GetKey(KeyCode.RightArrow) && direction != PlayerDirection.LEFT)
-        {
-            direction = PlayerDirection.RIGHT;
-        }
-        if (Input.GetKey(KeyCode.DownArrow) && direction != PlayerDirection.UP)
-        {
-            direction = PlayerDirection.DOWN;
-        }
-        if (Input.GetKey(KeyCode.UpArrow) && direction != PlayerDirection.DOWN)
-        {
-            direction = PlayerDirection.UP;
-        }
+        HandleInput();
         if (snakeMoveTimer < 0)
         {
             snakeMoveTimer += snakeSpeed; // check that this doesnt fail in any way
@@ -149,6 +130,7 @@ public class SnakeHeadScript : SnakeBodyScript
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 {
+                    GameManager.Instance.Flip();
                     Debug.Log(flip);
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     Vector3[] positionSteps = calculatePositionSteps(newPosition, flip);
@@ -174,6 +156,36 @@ public class SnakeHeadScript : SnakeBodyScript
                     didEat = false;
                 }
             }
+        }
+    }
+    /// <summary>
+    /// Handles user input
+    /// </summary>
+    private void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            didEat = true;
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow) && direction != PlayerDirection.RIGHT)
+        {
+            direction = PlayerDirection.LEFT;
+        }
+
+        if (Input.GetKey(KeyCode.RightArrow) && direction != PlayerDirection.LEFT)
+        {
+            direction = PlayerDirection.RIGHT;
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow) && direction != PlayerDirection.UP)
+        {
+            direction = PlayerDirection.DOWN;
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow) && direction != PlayerDirection.DOWN)
+        {
+            direction = PlayerDirection.UP;
         }
     }
 }
