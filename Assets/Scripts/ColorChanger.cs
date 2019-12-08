@@ -16,9 +16,9 @@ public class NewBehaviourScript : MonoBehaviour
         var meshRenderers = GetComponentsInChildren<MeshRenderer>();
 
         //MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
-        Color original = meshRenderers[0].material.color; // Assumes all materials are the same
+        Color original = meshRenderers[0].material.color; // Assumes all materials are the same!
         Color newColor = GetNewColor(original);
-        float flashTime = 0.5f; // Half a second.
+        float flashTime = 0.5f; // Half a second between color changes
         
         // Flash all children
         foreach (var meshRenderer in meshRenderers)
@@ -29,14 +29,16 @@ public class NewBehaviourScript : MonoBehaviour
 
     IEnumerator Flash(MeshRenderer meshRenderer, Color original, Color newColor, float flashTime)
     {
+        // Set the new color to flash to
         Color flashColor = newColor;
         while (_flashing)
         {
             meshRenderer.material.color = newColor;
             yield return new WaitForSeconds(flashTime);
+            //Change the color to change to between flashes
             flashColor = (flashColor == original) ? newColor : original;
         }
-
+        // Change the color back to the original
         meshRenderer.material.color = original;
     }
 

@@ -5,6 +5,8 @@ using UnityEngine;
 public class EventManager : MonoBehaviour
 {
     
+    // ======================== Color Changing ======================== //
+
     public delegate void ColorChange();
 
     public static event ColorChange ColorChanges;
@@ -14,6 +16,8 @@ public class EventManager : MonoBehaviour
         ColorChanges?.Invoke();
     }
 
+    
+    // ======================== Flipping ======================== //
     public delegate void FlipFunction();
 
     public static event FlipFunction FlipProcedure;

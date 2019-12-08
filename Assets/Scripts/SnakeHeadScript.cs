@@ -115,46 +115,40 @@ public class SnakeHeadScript : SnakeBodyScript
             // to keep cycle length consistant)
             if (flip == Flip.NO_FLIP)
             {
-                Vector3 newPosition;
-                switch (direction)
-                {
-                    case PlayerDirection.UP:
-                        newPosition = transform.localPosition + Vector3.forward * verticalMultiplier;
-                        break;
-                    case PlayerDirection.DOWN:
-                        newPosition = transform.localPosition + Vector3.back * verticalMultiplier;
-                        break;
-                    case PlayerDirection.RIGHT:
-                        newPosition = transform.localPosition + Vector3.right * horizontalMultiplier;
-                        break;
-                    case PlayerDirection.LEFT:
-                        newPosition = transform.localPosition + Vector3.left * horizontalMultiplier;
-                        break;
-                    default:
-                        newPosition = transform.localPosition;
-                        break;
-                }
+                Vector3 newPosition = GetNewPosition();
+//                switch (direction)
+//                {
+//                    case PlayerDirection.UP:
+//                        newPosition = transform.localPosition + Vector3.forward * verticalMultiplier;
+//                        break;
+//                    case PlayerDirection.DOWN:
+//                        newPosition = transform.localPosition + Vector3.back * verticalMultiplier;
+//                        break;
+//                    case PlayerDirection.RIGHT:
+//                        newPosition = transform.localPosition + Vector3.right * horizontalMultiplier;
+//                        break;
+//                    case PlayerDirection.LEFT:
+//                        newPosition = transform.localPosition + Vector3.left * horizontalMultiplier;
+//                        break;
+//                    default:
+//                        newPosition = transform.localPosition;
+//                        break;
+//                }
 
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 {
+                    //This should be called instead of everything else
+                    //EventManager.DoFlip();
+                    
+                    //TODO: Delegate this
                     GameManager.Instance.Flip();
                     // Erez here, would like gamemanager to change to flipping state when a flip starts
                     Debug.Log(flip);
+                    
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     Vector3[] positionSteps = calculatePositionSteps(newPosition, flip);
-                    switch (flip)
-                    {
-                        case Flip.LEFT:
-                        case Flip.RIGHT:
-                            horizontalMultiplier = horizontalMultiplier * -1;
-                            break;
-                        case Flip.UP:
-                        case Flip.DOWN:
-                            verticalMultiplier = verticalMultiplier * -1;
-                            break;
-                    }
-
+                    ChangeMovementDirection();
                     StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
                     StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
                     // Erez here, would like gamemanager to change back to running state after a flip is finished
@@ -168,6 +162,40 @@ public class SnakeHeadScript : SnakeBodyScript
                 }
             }
         }
+    }
+
+    private void ChangeMovementDirection()
+    {
+        switch (flip)
+        {
+            case Flip.LEFT:
+            case Flip.RIGHT:
+                horizontalMultiplier = horizontalMultiplier * -1;
+                break;
+            case Flip.UP:
+            case Flip.DOWN:
+                verticalMultiplier = verticalMultiplier * -1;
+                break;
+        }
+    }
+
+
+    private Vector3 GetNewPosition()
+    {
+        switch (direction)
+        {
+            case PlayerDirection.UP:
+                return transform.localPosition + Vector3.forward * verticalMultiplier;
+            case PlayerDirection.DOWN:
+                return transform.localPosition + Vector3.back * verticalMultiplier;
+            case PlayerDirection.RIGHT:
+                return transform.localPosition + Vector3.right * horizontalMultiplier;
+            case PlayerDirection.LEFT:
+                return transform.localPosition + Vector3.left * horizontalMultiplier;
+            default:
+                return transform.localPosition;
+        }
+
     }
 
     /// <summary>

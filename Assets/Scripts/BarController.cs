@@ -14,6 +14,7 @@ public class BarController : MonoBehaviour
 
     private BarLogic _barLogic;
 
+    private const float WarningPercentage = 0.3f;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,9 @@ public class BarController : MonoBehaviour
         _barLogic.UpdateAmount(increase);
         var currPercentFilled = _barLogic.GetNormalizedAmount();
         _barImage.fillAmount = currPercentFilled;
-        if (currPercentFilled <= 0.3f)
+        //If the percentage is below 30% and going down
+        //So as to not flash while on the wrong side
+        if (currPercentFilled <= WarningPercentage && !increase)
         {
             EventManager.ChangeColors();
         }

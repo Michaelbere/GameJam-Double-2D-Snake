@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +7,12 @@ public class GameManager : Singleton<GameManager>
 {
     private int _score = 0;
 
-    private enum State
-    {
-        Flipping,
-        Running
-    }
+//    private enum State
+//    {
+//        Flipping,
+//        Running
+//    }
+    private bool _flipping = false;
 
     //Controllers for the different bars
     private BarController _dryBar;
@@ -18,7 +20,7 @@ public class GameManager : Singleton<GameManager>
     private BarController _airBar;
 
     // Current state of the game 
-    private State _gameState = State.Running;
+//    private State _gameState = State.Running;
 
     //Boolean telling bars if they are "active" or not
     private bool _upSide = false;
@@ -30,10 +32,16 @@ public class GameManager : Singleton<GameManager>
         SetControllers();
     }
 
+//    private void OnEnable()
+//    {
+//        EventManager.FlipProcedure += Flip;
+//    }
+
     // Update is called once per frame
     void Update()
     {
-        if (_gameState == State.Running)
+//        if (_gameState == State.Running)
+        if (!_flipping)
         {
             UpdateBars();
         }
@@ -74,10 +82,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Flip()
     {
-        _gameState = State.Flipping;
+//        _gameState = State.Flipping;
+        _flipping = true;
         _upSide = !_upSide;
     }
-    
-    
-    
 }
