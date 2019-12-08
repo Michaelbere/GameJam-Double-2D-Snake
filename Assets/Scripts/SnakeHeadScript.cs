@@ -4,22 +4,28 @@ using UnityEngine;
 
 public class SnakeHeadScript : SnakeBodyScript
 {
-
-    [Range(0.1f, 2)]
-    public float snakeSpeed = 0.5f;
+    [Range(0.1f, 2)] public float snakeSpeed = 0.5f;
     public Transform board;
     private float snakeMoveTimer;
 
     private bool didEat = false;
+
     // Start is called before the first frame update
     enum PlayerDirection
     {
-        UP, DOWN, RIGHT, LEFT
+        UP,
+        DOWN,
+        RIGHT,
+        LEFT
     }
 
     public enum Flip
     {
-        RIGHT, LEFT, UP, DOWN, NO_FLIP
+        RIGHT,
+        LEFT,
+        UP,
+        DOWN,
+        NO_FLIP
     }
 
     private Flip flip = Flip.NO_FLIP;
@@ -38,6 +44,7 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             return newPosition.y < 0 ? Flip.LEFT : Flip.RIGHT;
         }
+
         if (newPosition.z < 0)
         {
             return newPosition.y > 0 ? Flip.DOWN : Flip.UP;
@@ -46,6 +53,7 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             return newPosition.y < 0 ? Flip.DOWN : Flip.UP;
         }
+
         return Flip.NO_FLIP;
     }
 
@@ -77,15 +85,14 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             case Flip.LEFT:
             case Flip.RIGHT:
-                answer[3] = answer[2] + (answer[2].x < 0 ?
-                Vector3.right : Vector3.left);
+                answer[3] = answer[2] + (answer[2].x < 0 ? Vector3.right : Vector3.left);
                 break;
             case Flip.UP:
             case Flip.DOWN:
-                answer[3] = answer[2] + (answer[2].z < 0 ?
-                Vector3.forward : Vector3.back);
+                answer[3] = answer[2] + (answer[2].z < 0 ? Vector3.forward : Vector3.back);
                 break;
         }
+
         // answer[3] = answer[2];
         return answer;
     }
@@ -103,9 +110,9 @@ public class SnakeHeadScript : SnakeBodyScript
         if (snakeMoveTimer < 0)
         {
             snakeMoveTimer += snakeSpeed; // check that this doesnt fail in any way
-                                          //(the idea is that if it is too low the
-                                          //time passed will go on to the next cycle
-                                          // to keep cycle length consistant)
+            //(the idea is that if it is too low the
+            //time passed will go on to the next cycle
+            // to keep cycle length consistant)
             if (flip == Flip.NO_FLIP)
             {
                 Vector3 newPosition;
@@ -127,10 +134,12 @@ public class SnakeHeadScript : SnakeBodyScript
                         newPosition = transform.localPosition;
                         break;
                 }
+
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 {
                     GameManager.Instance.Flip();
+                    // Erez here, would like gamemanager to change to flipping state when a flip starts
                     Debug.Log(flip);
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     Vector3[] positionSteps = calculatePositionSteps(newPosition, flip);
@@ -145,8 +154,10 @@ public class SnakeHeadScript : SnakeBodyScript
                             verticalMultiplier = verticalMultiplier * -1;
                             break;
                     }
+
                     StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
                     StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
+                    // Erez here, would like gamemanager to change back to running state after a flip is finished
                 }
                 else
                 {
@@ -158,6 +169,7 @@ public class SnakeHeadScript : SnakeBodyScript
             }
         }
     }
+
     /// <summary>
     /// Handles user input
     /// </summary>

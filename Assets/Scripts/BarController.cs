@@ -38,7 +38,7 @@ public class BarController : MonoBehaviour
         _barImage.fillAmount = currPercentFilled;
         if (currPercentFilled <= 0.3f)
         {
-            
+            EventManager.ChangeColors();
         }
     }
 

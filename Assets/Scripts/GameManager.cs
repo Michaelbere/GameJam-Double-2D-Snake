@@ -6,10 +6,19 @@ public class GameManager : Singleton<GameManager>
 {
     private int _score = 0;
 
+    private enum State
+    {
+        Flipping,
+        Running
+    }
+
     //Controllers for the different bars
     private BarController _dryBar;
 
     private BarController _airBar;
+
+    // Current state of the game 
+    private State _gameState = State.Running;
 
     //Boolean telling bars if they are "active" or not
     private bool _upSide = false;
@@ -24,10 +33,13 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
-        UpdateBars();
+        if (_gameState == State.Running)
+        {
+            UpdateBars();
+        }
     }
-    
-    
+
+
     /// <summary>
     /// Used to activate the Manager
     /// </summary>
@@ -40,11 +52,10 @@ public class GameManager : Singleton<GameManager>
     {
         _score = newScore;
     }
-    
-    
+
+
     // ================================ Bar Controlling ================================ //
-    
-   
+
 
     private void SetControllers()
     {
@@ -63,6 +74,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Flip()
     {
+        _gameState = State.Flipping;
         _upSide = !_upSide;
     }
     
