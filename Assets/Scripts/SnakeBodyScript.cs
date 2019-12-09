@@ -18,8 +18,6 @@ public class SnakeBodyScript : MonoBehaviour
     {
         Vector3 oldPosition = transform.localPosition;
         transform.localPosition = newPosition;
-        Vector3 relativePos = newPosition - oldPosition;
-        transform.rotation = Quaternion.LookRotation(relativePos, Vector3.up);
         if (isTail())
         {
             if (didEat)
@@ -30,10 +28,14 @@ public class SnakeBodyScript : MonoBehaviour
                 newPartScript.prevBodyPart = transform;
                 GetComponent<SnakeBodyScript>().nextBodyPart = newPart.transform;
                 nextBodyPart.GetComponent<SnakeBodyScript>().move(oldPosition, false);
+                Vector3 relativePos = newPosition - oldPosition;
+                transform.rotation = Quaternion.LookRotation(relativePos, Vector3.up);
             }
         }
         else
         {
+            Vector3 relativePos = newPosition - oldPosition;
+            transform.rotation = Quaternion.LookRotation(relativePos, Vector3.up);
             nextBodyPart.GetComponent<SnakeBodyScript>().move(oldPosition, didEat);
         }
     }

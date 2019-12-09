@@ -9,17 +9,17 @@ public class BombScript : FruitScript
     void Start()
     {
         base.Start();
-        expireTime = 25f;
+        // expireTime = 25f;
     }
     void Update()
     {
         bool countTime = !gameBoard.GetComponent<BoardFlippingScript>().isSunnySideUp();
         expiryCounter += countTime ? Time.deltaTime : 0;
-//        if (countTime){Debug.Log("counting");}
+        // if (countTime){Debug.Log(expiryCounter-expireTime);}
         if (expiryCounter > expireTime)
         {
             expiryCounter = 0;
-            getNewLocation();
+            getNewLocation(-1);
         }
     }
     
