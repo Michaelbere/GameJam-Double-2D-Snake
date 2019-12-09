@@ -27,6 +27,43 @@ public class BoardTileGenerator : MonoBehaviour
         initMap();
     }
 
+    public void initMapEditor()
+    {
+        map = new int[boardWidth, boardHeight];
+        // map init
+        for (int row = 0; row < map.GetLength(0); row++)
+        {
+            for (int col = 0; col < map.GetLength(1); col++)
+            {
+                if (holes.Exists((HolePosition hole) => hole.x == row && hole.y == col))
+                {
+                    map[row, col] = 0; // a 30X30 full map    
+                }
+                else
+                {
+                    map[row, col] = 1; // a 30X30 full map
+                }
+            }
+        }
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
+        }
+        // tile creation
+        for (int row = 0; row < map.GetLength(0); row++)
+        {
+            for (int col = 0; col < map.GetLength(1); col++)
+            {
+                if (map[row, col] == 1)
+                {
+                    GameObject newTile = Instantiate(Resources.Load("BoardTile")) as GameObject;
+                    newTile.transform.parent = this.transform;
+                    newTile.transform.localPosition = new Vector3(row, 0, col);
+                }
+            }
+        }
+    }
+
     void initMap()
     {
         map = new int[boardWidth, boardHeight];
