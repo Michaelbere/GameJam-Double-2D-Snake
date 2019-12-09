@@ -1,23 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SnakeBodyScript : MonoBehaviour
 {
-
     public Transform prevBodyPart;
     public Transform nextBodyPart;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     protected bool isTail()
     {
@@ -32,7 +22,8 @@ public class SnakeBodyScript : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(relativePos, Vector3.up);
         if (isTail())
         {
-            if(didEat){
+            if (didEat)
+            {
                 GameObject newPart = Instantiate(Resources.Load("Body")) as GameObject;
                 newPart.transform.SetParent(transform.parent);
                 SnakeBodyScript newPartScript = newPart.GetComponent<SnakeBodyScript>();
@@ -46,4 +37,6 @@ public class SnakeBodyScript : MonoBehaviour
             nextBodyPart.GetComponent<SnakeBodyScript>().move(oldPosition, didEat);
         }
     }
+
+    
 }
