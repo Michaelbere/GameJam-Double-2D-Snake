@@ -830,7 +830,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prevBodyPart: {fileID: 0}
   nextBodyPart: {fileID: 2109938761}
-  snakeSpeed: 0.2
+  snakeSpeed: 0.1
   board: {fileID: 1199803925}
   boardTileGenerator: {fileID: 1892674893}
   scoreText: {fileID: 1543349864}
@@ -1428,10 +1428,12 @@ MonoBehaviour:
   boardWidth: 20
   boardHeight: 20
   holes:
-  - x: 1
-    y: 1
-  - x: 1
-    y: 2
+  - x: 3
+    y: 8
+  - x: 13
+    y: 4
+  - x: 15
+    y: 15
 --- !u!1 &2052733336
 GameObject:
   m_ObjectHideFlags: 0
