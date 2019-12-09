@@ -6,7 +6,7 @@
     <e p="C:\Users\Erez\Desktop\Unity Projects\GameJam-Double-2D-Snake" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="ColorFlasher.cs" t="Include" />
+        <e p="BombScript.cs" t="Include" />
         <e p="Demigiant" t="Include">
           <e p="DOTween" t="Include">
             <e p="Modules" t="Include">
@@ -27,6 +27,7 @@
           <e p="ColorChanger.cs" t="Include" />
           <e p="DryAirController.cs" t="Include" />
           <e p="EventManager.cs" t="Include" />
+          <e p="FruitScript.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
           <e p="MenuController.cs" t="Include" />
           <e p="Singleton.cs" t="Include" />

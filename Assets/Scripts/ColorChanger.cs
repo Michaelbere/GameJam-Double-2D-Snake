@@ -9,12 +9,12 @@ public class ColorChanger : MonoBehaviour
     void OnEnable()
     {
         EventManager.ColorChanges += FlashColors;
+        EventManager.FlipProcedure += StopFlashing;
     }
 
-    public void StopFlashing()
+    private void StopFlashing()
     {
         _flashing = false;
-        
     }
 
     private void FlashColors()
@@ -43,9 +43,10 @@ public class ColorChanger : MonoBehaviour
             meshRenderer.material.color = newColor;
             yield return new WaitForSeconds(flashTime);
             //Change the color to change to between flashes
+            Debug.Log("change color now please");
             flashColor = (flashColor == original) ? newColor : original;
+            Debug.Log(flashColor.ToString());
         }
-
         // Change the color back to the original
         meshRenderer.material.color = original;
     }

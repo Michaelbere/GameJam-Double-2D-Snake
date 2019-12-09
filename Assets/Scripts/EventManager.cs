@@ -24,10 +24,23 @@ public class EventManager : MonoBehaviour
     /// <summary>
     /// Called when flipping the board
     /// </summary>
-    public static void DoFlip()
+    public static void EnterFlip()
     {
         FlipProcedure?.Invoke();
     }
+
+    public delegate void FlipExit();
+
+    public static event FlipExit FlipExitProcedure;
+
+    /// <summary>
+    /// Called when done flipping the board
+    /// </summary>
+    public static void StopFlip()
+    {
+        FlipExitProcedure?.Invoke();
+    }
+
     // ======================== Game Resetting ======================== //
 
     public delegate void ResetFunc();

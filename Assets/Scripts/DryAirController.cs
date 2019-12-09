@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,12 @@ public class DryAirController : MonoBehaviour
     void Start()
     {
         SetControllers();
+    }
+
+    private void OnEnable()
+    {
+        EventManager.FlipProcedure += Flip;
+        EventManager.FlipExitProcedure += ContinueRunning;
     }
 
     // Update is called once per frame
@@ -39,7 +46,7 @@ public class DryAirController : MonoBehaviour
         _upSide = !_upSide;
     }
 
-    public void ContinueRunning()
+    private void ContinueRunning()
     {
         _flipping = false;
     }

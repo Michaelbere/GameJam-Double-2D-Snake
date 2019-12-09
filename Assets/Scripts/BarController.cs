@@ -64,6 +64,7 @@ public class BarController : MonoBehaviour
             EventManager.ResetGame();
         }
     }
+
     /// <summary>
     /// Class Implementing the logic of a Bar.
     /// </summary>
@@ -111,4 +112,3 @@ public class BarController : MonoBehaviour
         }
     }
 }
-
