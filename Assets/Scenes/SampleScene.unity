@@ -954,6 +954,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snakeHead: {fileID: 1126422422}
+  water: {fileID: 2100000, guid: bdae88fe5fa89492b8dffbd0dd47c0df, type: 2}
+  desert: {fileID: 2100000, guid: 7c78cc8c3aee94c1b96ebda0fb9861db, type: 2}
   bomb: {fileID: 5958750596780357797, guid: 3c755da496376cb41aac2a937e2aa6e2, type: 3}
   darkPlane: {fileID: 1291660618}
   newBombTime: 3
