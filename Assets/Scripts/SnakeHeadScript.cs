@@ -1,11 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
+using UnityEngine.UI;
+using Quaternion = System.Numerics.Quaternion;
+using TMPro;
 
 public class SnakeHeadScript : SnakeBodyScript
 {
     [Range(0.1f, 2)] public float snakeSpeed = 0.5f;
     public Transform board;
+    public TextMeshProUGUI scoreText;
+    private int score = 0;
     private float snakeMoveTimer;
 
     private bool didEat = false;
@@ -71,7 +78,7 @@ public class SnakeHeadScript : SnakeBodyScript
         for (int i = 0; i < newPositions.Length; ++i)
         {
             move(newPositions[i], false);
-            Debug.Log(newPositions[i]);
+//            Debug.Log(newPositions[i]);
             yield return new WaitForSeconds(delay);
         }
     }
@@ -101,6 +108,7 @@ public class SnakeHeadScript : SnakeBodyScript
     void Start()
     {
         snakeMoveTimer = snakeSpeed;
+        setScoreText();
     }
 
     // Update is called once per frame
@@ -156,8 +164,8 @@ public class SnakeHeadScript : SnakeBodyScript
                 }
                 else
                 {
-                    // TODO add method to check if eaten and send instead of false
-                    Debug.Log("Move was called");
+                    // TODO add method to check if eaten and send instead of false - fixed: collision handles that
+//                    Debug.Log("Move was called");
                     move(newPosition, didEat);
                     didEat = false;
                 }
@@ -165,7 +173,28 @@ public class SnakeHeadScript : SnakeBodyScript
         }
     }
 
-    private void ChangeMovementDirection()
+    private void OnTriggerEnter(Collider target)
+    {
+        if (target.gameObject.CompareTag("Fruit"))
+        {
+            score += 1;
+            didEat = true;
+            setScoreText();
+        }
+        
+        if (target.gameObject.CompareTag("Body") || target.gameObject.CompareTag("Bomb"))
+        {
+            Debug.Log("Dead");
+            Time.timeScale = 0f;
+        }
+    }
+
+    void setScoreText()
+    {
+        scoreText.text = "Score: " + score;
+    }
+    
+   private void ChangeMovementDirection()
     {
         switch (flip)
         {
