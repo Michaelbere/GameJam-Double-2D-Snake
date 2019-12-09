@@ -68,7 +68,6 @@ public class SnakeHeadScript : SnakeBodyScript
     {
         yield return new WaitForSeconds(delay);
         flip = Flip.NO_FLIP;
-//        GameManager.Instance.ContinueRunning();
         EventManager.StopFlip();
     }
 
@@ -147,14 +146,7 @@ public class SnakeHeadScript : SnakeBodyScript
 
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
-                {
-                    //This should be called instead of everything else
-                    //EventManager.DoFlip();
-
-                    //TODO: Delegate this
-//                    GameManager.Instance.Flip();
-
-
+                { 
                     Debug.Log(flip);
                     EventManager.EnterFlip();
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);

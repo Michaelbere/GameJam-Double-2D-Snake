@@ -53,12 +53,11 @@ public class BarController : MonoBehaviour
             EventManager.ChangeColors();
         }
 
-        // If increasing, stop flashing
+        // If increasing, prevent flashing
         if (increase)
         {
             _flashing = false;
         }
-
         if (currPercentFilled <= 0)
         {
             EventManager.ResetGame();

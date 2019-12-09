@@ -58,6 +58,7 @@ public class ColorChanger : MonoBehaviour
     {
         Color newColor = original;
 //        newColor.a -= 0.5f; // Reduce alpha for some sort of flash effect
+        //TODO: this can be changed to whatever the designers want later. This a placeholder
         newColor = Color.red;
         return newColor;
     }
