@@ -153,7 +153,6 @@ public class SnakeHeadScript : SnakeBodyScript
                         newPosition = transform.localPosition;
                         break;
                 }
-                checkDeath(newPosition);
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 {
@@ -185,23 +184,6 @@ public class SnakeHeadScript : SnakeBodyScript
         }
     }
 
-    private void checkDeath(Vector3 newPosition)  // not working yet
-    {
-        float x = 0.1f;
-        float y = 0.1f;
-        float z = 0.1f;
-        var checkResult = Physics.OverlapBox(newPosition, (transform.localScale / 2) - new Vector3(x,y,z));
-        for (int i = 0; i < checkResult.Length; i++)
-        {
-            Debug.Log("Touch " + checkResult[i].gameObject.tag);
-            if (checkResult[i].gameObject.CompareTag("Body"))
-            {
-                Debug.Log("Touch Body");
-                Time.timeScale = 0f;
-            }
-        }
-    }
-
     private void OnTriggerEnter(Collider target)
     {
         if (target.gameObject.CompareTag("Fruit"))
@@ -209,6 +191,12 @@ public class SnakeHeadScript : SnakeBodyScript
             score += 1;
             didEat = true;
             setScoreText();
+        }
+        
+        if (target.gameObject.CompareTag("Body") || target.gameObject.CompareTag("Bomb"))
+        {
+            Debug.Log("Dead");
+            Time.timeScale = 0f;
         }
     }
 

@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class BombScript : FruitScript
 {
-    public Transform gameBoard;
+    public GameObject gameBoard;
+
+    void Start()
+    {
+        base.Start();
+        expireTime = 25f;
+    }
     void Update()
     {
         bool countTime = !gameBoard.GetComponent<BoardFlippingScript>().isSunnySideUp();
         expiryCounter += countTime ? Time.deltaTime : 0;
-        if (countTime){Debug.Log("counting");}
+//        if (countTime){Debug.Log("counting");}
         if (expiryCounter > expireTime)
         {
             expiryCounter = 0;
@@ -21,10 +27,7 @@ public class BombScript : FruitScript
     {
         if (target.gameObject.CompareTag("Head"))
         {
-            Debug.Log("Bombed");
-            Time.timeScale = 0f;
-//            expiryCounter = 0;
-//            getNewLocation(target);
+            Debug.Log("Bombed");  // this is just so the bomb wont jump when touched
         }
     }
 }
