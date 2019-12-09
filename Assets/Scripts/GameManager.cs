@@ -86,4 +86,9 @@ public class GameManager : Singleton<GameManager>
         _flipping = true;
         _upSide = !_upSide;
     }
+
+    public void ContinueRunning()
+    {
+        _flipping = false;
+    }
 }
