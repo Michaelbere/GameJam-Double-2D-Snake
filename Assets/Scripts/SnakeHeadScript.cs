@@ -5,12 +5,13 @@ using System.Diagnostics.Tracing;
 using UnityEngine;
 using UnityEngine.UI;
 using Quaternion = System.Numerics.Quaternion;
+using TMPro;
 
 public class SnakeHeadScript : SnakeBodyScript
 {
     [Range(0.1f, 2)] public float snakeSpeed = 0.5f;
     public Transform board;
-    public Text scoreText;
+    public TextMeshProUGUI scoreText;
     private int score = 0;
     private float snakeMoveTimer;
 
