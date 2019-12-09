@@ -162,7 +162,6 @@ public class SnakeHeadScript : SnakeBodyScript
                     ChangeMovementDirection();
                     StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
                     StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
-                    // Erez here, would like gamemanager to change back to running state after a flip is finished
                 }
                 else
                 {

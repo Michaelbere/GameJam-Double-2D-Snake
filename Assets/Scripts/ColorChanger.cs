@@ -40,12 +40,10 @@ public class ColorChanger : MonoBehaviour
         while (_flashing)
         {
             Debug.Log("changed");
-            meshRenderer.material.color = newColor;
+            meshRenderer.material.color = flashColor;
             yield return new WaitForSeconds(flashTime);
             //Change the color to change to between flashes
-            Debug.Log("change color now please");
-            flashColor = (flashColor == original) ? newColor : original;
-            Debug.Log(flashColor.ToString());
+            flashColor = flashColor == original ? newColor : original;
         }
         // Change the color back to the original
         meshRenderer.material.color = original;
