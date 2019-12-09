@@ -125,25 +125,6 @@ public class SnakeHeadScript : SnakeBodyScript
             if (flip == Flip.NO_FLIP)
             {
                 Vector3 newPosition = GetNewPosition();
-//                switch (direction)
-//                {
-//                    case PlayerDirection.UP:
-//                        newPosition = transform.localPosition + Vector3.forward * verticalMultiplier;
-//                        break;
-//                    case PlayerDirection.DOWN:
-//                        newPosition = transform.localPosition + Vector3.back * verticalMultiplier;
-//                        break;
-//                    case PlayerDirection.RIGHT:
-//                        newPosition = transform.localPosition + Vector3.right * horizontalMultiplier;
-//                        break;
-//                    case PlayerDirection.LEFT:
-//                        newPosition = transform.localPosition + Vector3.left * horizontalMultiplier;
-//                        break;
-//                    default:
-//                        newPosition = transform.localPosition;
-//                        break;
-//                }
-
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 {
@@ -232,11 +213,6 @@ public class SnakeHeadScript : SnakeBodyScript
     /// </summary>
     private void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            didEat = true;
-        }
-
         if (Input.GetKey(KeyCode.LeftArrow) && direction != PlayerDirection.RIGHT)
         {
             direction = PlayerDirection.LEFT;

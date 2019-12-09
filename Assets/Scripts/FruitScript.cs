@@ -6,6 +6,8 @@ public class FruitScript : MonoBehaviour
 {
     public Transform plane;
 
+    public BoardTileGenerator board;
+
     protected int minX, minZ, maxX, maxZ;
     protected float radius;
 
@@ -29,24 +31,13 @@ public class FruitScript : MonoBehaviour
         if (expiryCounter > expireTime)
         {
             expiryCounter = 0;
-            getNewLocation();
+            getNewLocation(1);
         }
     }
 
-    public void getNewLocation(Collider target=null)
+    public void getNewLocation(int zCoordinate)
     {
-        Collider[] checkResult;
-        float newX;
-        float newZ;
-//        Debug.Log("for" + gameObject.tag + "finding loc");
-        do
-        {
-            newX = Random.Range(minX, maxX) + radius;
-            newZ = Random.Range(minZ, maxZ) + radius;
-            checkResult = Physics.OverlapSphere(new Vector3(newX, transform.localPosition.y, newZ), radius - 0.01f);
-        } while (checkResult.Length != 0);
-//        Debug.Log("for" + gameObject.tag + "found" + newX + " , " + newZ+ " , " + transform.localPosition.y);
-        transform.localPosition = new Vector3(newX, transform.localPosition.y , newZ);
+        transform.localPosition = board.getFreePosition(zCoordinate);
     } 
     
     private void OnTriggerEnter(Collider target)
@@ -55,7 +46,7 @@ public class FruitScript : MonoBehaviour
         {
 //            Debug.Log("Eated");
             expiryCounter = 0;
-            getNewLocation(target);
+            getNewLocation(1);
         }
     }
 }
