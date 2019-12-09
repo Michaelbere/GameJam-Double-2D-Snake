@@ -15,7 +15,7 @@ public class BombScript : FruitScript
     {
         bool countTime = !gameBoard.GetComponent<BoardFlippingScript>().isSunnySideUp();
         expiryCounter += countTime ? Time.deltaTime : 0;
-        if (countTime){Debug.Log(expiryCounter-expireTime);}
+        // if (countTime){Debug.Log(expiryCounter-expireTime);}
         if (expiryCounter > expireTime)
         {
             expiryCounter = 0;

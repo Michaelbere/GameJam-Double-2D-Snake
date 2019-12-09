@@ -11,6 +11,8 @@ public class SnakeHeadScript : SnakeBodyScript
 {
     [Range(0.1f, 2)] public float snakeSpeed = 0.5f;
     public Transform board;
+
+    public BoardTileGenerator boardTileGenerator;
     public TextMeshProUGUI scoreText;
     private int score = 0;
     private float snakeMoveTimer;
@@ -26,6 +28,12 @@ public class SnakeHeadScript : SnakeBodyScript
         LEFT
     }
 
+    public enum FlipType
+    {
+        WALL,
+        HOLE
+    }
+
     public enum Flip
     {
         RIGHT,
@@ -36,32 +44,37 @@ public class SnakeHeadScript : SnakeBodyScript
     }
 
     private Flip flip = Flip.NO_FLIP;
-    private PlayerDirection direction = PlayerDirection.UP;
+    private PlayerDirection newDirection = PlayerDirection.UP;
+    private PlayerDirection realDirection = PlayerDirection.UP;
 
     private int verticalMultiplier = 1;
     private int horizontalMultiplier = 1;
 
-    Flip calculateFlip(Vector3 newPosition)
+    (Flip, FlipType) calculateFlip(Vector3 newPosition)
     {
         if (newPosition.x < 0)
         {
-            return newPosition.y > 0 ? Flip.LEFT : Flip.RIGHT;
+            return (newPosition.y > 0 ? Flip.LEFT : Flip.RIGHT, FlipType.WALL);
         }
-        else if (newPosition.x > 19)
+        if (newPosition.x >= boardTileGenerator.getWidth())
         {
-            return newPosition.y < 0 ? Flip.LEFT : Flip.RIGHT;
+            return (newPosition.y < 0 ? Flip.LEFT : Flip.RIGHT, FlipType.WALL);
         }
 
         if (newPosition.z < 0)
         {
-            return newPosition.y > 0 ? Flip.DOWN : Flip.UP;
+            return (newPosition.y > 0 ? Flip.DOWN : Flip.UP, FlipType.WALL);
         }
-        else if (newPosition.z > 29)
+        if (newPosition.z >= boardTileGenerator.getHeight())
         {
-            return newPosition.y < 0 ? Flip.DOWN : Flip.UP;
+            return (newPosition.y < 0 ? Flip.DOWN : Flip.UP, FlipType.WALL);
+        }
+        if (boardTileGenerator.isHole(newPosition))
+        {
+            return ((realDirection == PlayerDirection.UP || realDirection == PlayerDirection.DOWN) ? Flip.RIGHT : Flip.DOWN, FlipType.HOLE);
         }
 
-        return Flip.NO_FLIP;
+        return (Flip.NO_FLIP, FlipType.WALL);
     }
 
     IEnumerator DelayedResetFlip(float delay)
@@ -78,13 +91,14 @@ public class SnakeHeadScript : SnakeBodyScript
         for (int i = 0; i < newPositions.Length; ++i)
         {
             move(newPositions[i], false);
-//            Debug.Log(newPositions[i]);
+            //            Debug.Log(newPositions[i]);
             yield return new WaitForSeconds(delay);
         }
     }
 
-    Vector3[] calculatePositionSteps(Vector3 newPosition, Flip flip)
+    Vector3[] calculatePositionSteps(Vector3 newPosition, Flip flip, FlipType flipType)
     {
+
         Vector3[] answer = new Vector3[4];
         answer[0] = newPosition;
         answer[1] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right);
@@ -93,17 +107,28 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             case Flip.LEFT:
             case Flip.RIGHT:
-                answer[3] = answer[2] + (answer[2].x < 0 ? Vector3.right : Vector3.left);
+                if (flipType == FlipType.WALL)
+                {
+                    answer[3] = answer[2] + (answer[2].x < 0 ? Vector3.right : Vector3.left);
+                }
+                else {
+                    answer[3] = answer[2] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                }
                 break;
             case Flip.UP:
             case Flip.DOWN:
-                answer[3] = answer[2] + (answer[2].z < 0 ? Vector3.forward : Vector3.back);
+                if (flipType == FlipType.WALL)
+                {
+                    answer[3] = answer[2] + (answer[2].z < 0 ? Vector3.forward : Vector3.back);
+                }
+                else {
+                    answer[3] = answer[2] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                }
                 break;
         }
-
-        // answer[3] = answer[2];
         return answer;
     }
+
 
     void Start()
     {
@@ -118,14 +143,16 @@ public class SnakeHeadScript : SnakeBodyScript
         HandleInput();
         if (snakeMoveTimer < 0)
         {
+            realDirection = newDirection;
             snakeMoveTimer += snakeSpeed; // check that this doesnt fail in any way
-            //(the idea is that if it is too low the
-            //time passed will go on to the next cycle
-            // to keep cycle length consistant)
+                                          //(the idea is that if it is too low the
+                                          //time passed will go on to the next cycle
+                                          // to keep cycle length consistant)
             if (flip == Flip.NO_FLIP)
             {
                 Vector3 newPosition = GetNewPosition();
-                flip = calculateFlip(newPosition);
+                FlipType flipType;
+                (flip, flipType) = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 {
                     //This should be called instead of everything else
@@ -134,10 +161,8 @@ public class SnakeHeadScript : SnakeBodyScript
                     //TODO: Delegate this
                     GameManager.Instance.Flip();
                     // Erez here, would like gamemanager to change to flipping state when a flip starts
-                    Debug.Log(flip);
-
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
-                    Vector3[] positionSteps = calculatePositionSteps(newPosition, flip);
+                    Vector3[] positionSteps = calculatePositionSteps(newPosition, flip, flipType);
                     ChangeMovementDirection();
                     StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
                     StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
@@ -146,7 +171,7 @@ public class SnakeHeadScript : SnakeBodyScript
                 else
                 {
                     // TODO add method to check if eaten and send instead of false - fixed: collision handles that
-//                    Debug.Log("Move was called");
+                    //                    Debug.Log("Move was called");
                     move(newPosition, didEat);
                     didEat = false;
                 }
@@ -162,7 +187,7 @@ public class SnakeHeadScript : SnakeBodyScript
             didEat = true;
             setScoreText();
         }
-        
+
         if (target.gameObject.CompareTag("Body") || target.gameObject.CompareTag("Bomb"))
         {
             Debug.Log("Dead");
@@ -174,8 +199,8 @@ public class SnakeHeadScript : SnakeBodyScript
     {
         scoreText.text = "Score: " + score;
     }
-    
-   private void ChangeMovementDirection()
+
+    private void ChangeMovementDirection()
     {
         switch (flip)
         {
@@ -193,7 +218,7 @@ public class SnakeHeadScript : SnakeBodyScript
 
     private Vector3 GetNewPosition()
     {
-        switch (direction)
+        switch (realDirection)
         {
             case PlayerDirection.UP:
                 return transform.localPosition + Vector3.forward * verticalMultiplier;
@@ -213,24 +238,24 @@ public class SnakeHeadScript : SnakeBodyScript
     /// </summary>
     private void HandleInput()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) && direction != PlayerDirection.RIGHT)
+        if (Input.GetKey(KeyCode.LeftArrow) && realDirection != PlayerDirection.RIGHT)
         {
-            direction = PlayerDirection.LEFT;
+            newDirection = PlayerDirection.LEFT;
         }
 
-        if (Input.GetKey(KeyCode.RightArrow) && direction != PlayerDirection.LEFT)
+        if (Input.GetKey(KeyCode.RightArrow) && realDirection != PlayerDirection.LEFT)
         {
-            direction = PlayerDirection.RIGHT;
+            newDirection = PlayerDirection.RIGHT;
         }
 
-        if (Input.GetKey(KeyCode.DownArrow) && direction != PlayerDirection.UP)
+        if (Input.GetKey(KeyCode.DownArrow) && realDirection != PlayerDirection.UP)
         {
-            direction = PlayerDirection.DOWN;
+            newDirection = PlayerDirection.DOWN;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) && direction != PlayerDirection.DOWN)
+        if (Input.GetKey(KeyCode.UpArrow) && realDirection != PlayerDirection.DOWN)
         {
-            direction = PlayerDirection.UP;
+            newDirection = PlayerDirection.UP;
         }
     }
 }

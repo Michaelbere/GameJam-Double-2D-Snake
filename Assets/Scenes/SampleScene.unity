@@ -832,6 +832,7 @@ MonoBehaviour:
   nextBodyPart: {fileID: 2109938761}
   snakeSpeed: 0.2
   board: {fileID: 1199803925}
+  boardTileGenerator: {fileID: 1892674893}
   scoreText: {fileID: 1543349864}
 --- !u!65 &1126422424
 BoxCollider:
@@ -1423,7 +1424,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffecc8b931a258d43ae926cde4f413e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeHead: {fileID: 0}
+  snakeHead: {fileID: 1126422423}
+  boardWidth: 20
+  boardHeight: 20
+  holes:
+  - x: 1
+    y: 1
+  - x: 1
+    y: 2
 --- !u!1 &2052733336
 GameObject:
   m_ObjectHideFlags: 0
