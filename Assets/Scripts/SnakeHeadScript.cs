@@ -68,7 +68,7 @@ public class SnakeHeadScript : SnakeBodyScript
     {
         yield return new WaitForSeconds(delay);
         flip = Flip.NO_FLIP;
-        GameManager.Instance.ContinueRunning();
+        EventManager.StopFlip();
     }
 
     IEnumerator DelayedMove(Vector3[] newPositions, float delay)
@@ -125,25 +125,6 @@ public class SnakeHeadScript : SnakeBodyScript
             if (flip == Flip.NO_FLIP)
             {
                 Vector3 newPosition = GetNewPosition();
-//                switch (direction)
-//                {
-//                    case PlayerDirection.UP:
-//                        newPosition = transform.localPosition + Vector3.forward * verticalMultiplier;
-//                        break;
-//                    case PlayerDirection.DOWN:
-//                        newPosition = transform.localPosition + Vector3.back * verticalMultiplier;
-//                        break;
-//                    case PlayerDirection.RIGHT:
-//                        newPosition = transform.localPosition + Vector3.right * horizontalMultiplier;
-//                        break;
-//                    case PlayerDirection.LEFT:
-//                        newPosition = transform.localPosition + Vector3.left * horizontalMultiplier;
-//                        break;
-//                    default:
-//                        newPosition = transform.localPosition;
-//                        break;
-//                }
-
                 flip = calculateFlip(newPosition);
                 if (flip != Flip.NO_FLIP)
                 { 
@@ -154,7 +135,6 @@ public class SnakeHeadScript : SnakeBodyScript
                     ChangeMovementDirection();
                     StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
                     StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
-                    // Erez here, would like gamemanager to change back to running state after a flip is finished
                 }
                 else
                 {
