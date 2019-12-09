@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-    
     // ======================== Color Changing ======================== //
 
     public delegate void ColorChange();
@@ -16,11 +15,12 @@ public class EventManager : MonoBehaviour
         ColorChanges?.Invoke();
     }
 
-    
+
     // ======================== Flipping ======================== //
     public delegate void FlipFunction();
 
     public static event FlipFunction FlipProcedure;
+
     /// <summary>
     /// Called when flipping the board
     /// </summary>
@@ -28,7 +28,14 @@ public class EventManager : MonoBehaviour
     {
         FlipProcedure?.Invoke();
     }
-    
-    
+    // ======================== Game Resetting ======================== //
 
+    public delegate void ResetFunc();
+
+    public static event ResetFunc ResetProcedure;
+
+    public static void ResetGame()
+    {
+        ResetProcedure?.Invoke();
+    }
 }

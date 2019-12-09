@@ -25,6 +25,7 @@
           <e p="BarController.cs" t="Include" />
           <e p="BoardFlippingScript.cs" t="Include" />
           <e p="ColorChanger.cs" t="Include" />
+          <e p="DryAirController.cs" t="Include" />
           <e p="EventManager.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
           <e p="MenuController.cs" t="Include" />
