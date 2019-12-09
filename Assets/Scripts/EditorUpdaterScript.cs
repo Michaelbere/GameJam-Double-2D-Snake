@@ -20,6 +20,6 @@ public class EditorUpdaterScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        board.initMapEditor();
     }
 }
