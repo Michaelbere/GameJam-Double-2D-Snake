@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Quaternion = System.Numerics.Quaternion;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SnakeHeadScript : SnakeBodyScript
 {
@@ -49,10 +50,13 @@ public class SnakeHeadScript : SnakeBodyScript
 
     private int verticalMultiplier = 1;
     private int horizontalMultiplier = 1;
-    
-    public void death(){
-        snakeSpeed = 10^6;
+
+    public void death()    
+    {
+//        snakeSpeed = 10^6
+        SceneManager.LoadScene("Scenes/Menu");
     }
+
 
     (Flip, FlipType) calculateFlip(Vector3 newPosition)
     {
@@ -60,6 +64,7 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             return (newPosition.y > 0 ? Flip.LEFT : Flip.RIGHT, FlipType.WALL);
         }
+
         if (newPosition.x >= boardTileGenerator.getWidth())
         {
             return (newPosition.y < 0 ? Flip.LEFT : Flip.RIGHT, FlipType.WALL);
@@ -69,13 +74,17 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             return (newPosition.y > 0 ? Flip.DOWN : Flip.UP, FlipType.WALL);
         }
+
         if (newPosition.z >= boardTileGenerator.getHeight())
         {
             return (newPosition.y < 0 ? Flip.DOWN : Flip.UP, FlipType.WALL);
         }
+
         if (boardTileGenerator.isHole(newPosition))
         {
-            return ((realDirection == PlayerDirection.UP || realDirection == PlayerDirection.DOWN) ? Flip.RIGHT : Flip.DOWN, FlipType.HOLE);
+            return (
+                (realDirection == PlayerDirection.UP || realDirection == PlayerDirection.DOWN) ? Flip.RIGHT : Flip.DOWN,
+                FlipType.HOLE);
         }
 
         return (Flip.NO_FLIP, FlipType.WALL);
@@ -104,7 +113,6 @@ public class SnakeHeadScript : SnakeBodyScript
     {
         if (flipType == FlipType.WALL)
         {
-
             Vector3[] answer = new Vector3[4];
             answer[0] = newPosition;
             answer[1] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right);
@@ -120,6 +128,7 @@ public class SnakeHeadScript : SnakeBodyScript
                     answer[3] = answer[2] + (answer[2].z < 0 ? Vector3.forward : Vector3.back);
                     break;
             }
+
             return answer;
         }
         else
@@ -131,21 +140,28 @@ public class SnakeHeadScript : SnakeBodyScript
             {
                 case Flip.LEFT:
                 case Flip.RIGHT:
-                    answer[2] = answer[1] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
-                    answer[3] = answer[2] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[2] = answer[1] + verticalMultiplier *
+                                (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[3] = answer[2] + verticalMultiplier *
+                                (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
                     answer[4] = answer[3] + Vector3.Scale(newPosition, Vector3.down);
-                    answer[5] = answer[4] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[5] = answer[4] + verticalMultiplier *
+                                (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
                     break;
                 case Flip.UP:
                 case Flip.DOWN:
-                    answer[2] = answer[1] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
-                    answer[3] = answer[2] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[2] = answer[1] + horizontalMultiplier *
+                                (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[3] = answer[2] + horizontalMultiplier *
+                                (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
                     answer[4] = answer[3] + Vector3.Scale(newPosition, Vector3.down);
-                    answer[5] = answer[4] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[5] = answer[4] + horizontalMultiplier *
+                                (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
 
                     // answer[5] = answer[4] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
                     break;
             }
+
             return answer;
         }
     }
@@ -167,9 +183,9 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             realDirection = newDirection;
             snakeMoveTimer += snakeSpeed; // check that this doesnt fail in any way
-                                          //(the idea is that if it is too low the
-                                          //time passed will go on to the next cycle
-                                          // to keep cycle length consistant)
+            //(the idea is that if it is too low the
+            //time passed will go on to the next cycle
+            // to keep cycle length consistant)
             if (flip == Flip.NO_FLIP)
             {
                 Vector3 newPosition = GetNewPosition();
@@ -206,6 +222,7 @@ public class SnakeHeadScript : SnakeBodyScript
         if (target.gameObject.CompareTag("Fruit"))
         {
             score += 1;
+            GameManager.Instance.IncrementScore();
             didEat = true;
             setScoreText();
         }

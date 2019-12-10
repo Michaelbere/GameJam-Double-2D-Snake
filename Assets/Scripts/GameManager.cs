@@ -21,7 +21,7 @@ public class GameManager : Singleton<GameManager>
     }
     // ================================ Score Handling ================================ //
 
-    public void IncrementScore(int newScore)
+    public void IncrementScore()
     {
         _score++;
     }
