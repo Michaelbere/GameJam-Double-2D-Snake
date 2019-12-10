@@ -51,7 +51,7 @@ public class SnakeHeadScript : SnakeBodyScript
     private int verticalMultiplier = 1;
     private int horizontalMultiplier = 1;
 
-    public void death()    
+    public void death()
     {
 //        snakeSpeed = 10^6
         SceneManager.LoadScene("Scenes/Menu");
@@ -229,8 +229,9 @@ public class SnakeHeadScript : SnakeBodyScript
 
         if (target.gameObject.CompareTag("Body") || target.gameObject.CompareTag("Bomb"))
         {
-            Debug.Log("Dead");
-            Time.timeScale = 0f;
+//            Debug.Log("Dead");
+//            Time.timeScale = 0f;
+            EventManager.ResetGame();
         }
     }
 
