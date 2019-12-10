@@ -98,35 +98,52 @@ public class SnakeHeadScript : SnakeBodyScript
 
     Vector3[] calculatePositionSteps(Vector3 newPosition, Flip flip, FlipType flipType)
     {
-
-        Vector3[] answer = new Vector3[4];
-        answer[0] = newPosition;
-        answer[1] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right);
-        answer[2] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right + Vector3.down);
-        switch (flip)
+        if (flipType == FlipType.WALL)
         {
-            case Flip.LEFT:
-            case Flip.RIGHT:
-                if (flipType == FlipType.WALL)
-                {
+
+            Vector3[] answer = new Vector3[4];
+            answer[0] = newPosition;
+            answer[1] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right);
+            answer[2] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right + Vector3.down);
+            switch (flip)
+            {
+                case Flip.LEFT:
+                case Flip.RIGHT:
                     answer[3] = answer[2] + (answer[2].x < 0 ? Vector3.right : Vector3.left);
-                }
-                else {
-                    answer[3] = answer[2] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
-                }
-                break;
-            case Flip.UP:
-            case Flip.DOWN:
-                if (flipType == FlipType.WALL)
-                {
+                    break;
+                case Flip.UP:
+                case Flip.DOWN:
                     answer[3] = answer[2] + (answer[2].z < 0 ? Vector3.forward : Vector3.back);
-                }
-                else {
-                    answer[3] = answer[2] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
-                }
-                break;
+                    break;
+            }
+            return answer;
         }
-        return answer;
+        else
+        {
+            Vector3[] answer = new Vector3[6];
+            answer[0] = newPosition;
+            answer[1] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right);
+            switch (flip)
+            {
+                case Flip.LEFT:
+                case Flip.RIGHT:
+                    answer[2] = answer[1] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[3] = answer[2] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[4] = answer[3] + Vector3.Scale(newPosition, Vector3.down);
+                    answer[5] = answer[4] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    break;
+                case Flip.UP:
+                case Flip.DOWN:
+                    answer[2] = answer[1] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[3] = answer[2] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[4] = answer[3] + Vector3.Scale(newPosition, Vector3.down);
+                    answer[5] = answer[4] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+
+                    // answer[5] = answer[4] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    break;
+            }
+            return answer;
+        }
     }
 
 
