@@ -37,7 +37,8 @@ public class BoardTileGenerator : MonoBehaviour
         {
             for (int col = 0; col < map.GetLength(1); col++)
             {
-                if (holes.Exists((HolePosition hole) => hole.x == row && hole.y == col))
+                if (holes.Exists((HolePosition hole) => (Mathf.Abs(hole.x - row) <= 1 &&
+                                                         Mathf.Abs(hole.y - col) <= 1)))
                 {
                     map[row, col] = 0; // a 30X30 full map    
                 }
@@ -75,7 +76,8 @@ public class BoardTileGenerator : MonoBehaviour
         {
             for (int col = 0; col < map.GetLength(1); col++)
             {
-                if (holes.Exists((HolePosition hole) => hole.x == row && hole.y == col))
+                if (holes.Exists((HolePosition hole) => (Mathf.Abs(hole.x - row) <= 1 &&
+                                                         Mathf.Abs(hole.y - col) <= 1)))
                 {
                     map[row, col] = 0; // a 30X30 full map    
                 }
