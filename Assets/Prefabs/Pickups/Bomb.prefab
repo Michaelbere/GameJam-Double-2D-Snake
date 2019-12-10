@@ -122,6 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa29074721d393e44be16e13262d19c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plane: {fileID: 0}
+  board: {fileID: 0}
   expireTime: 15
   gameBoard: {fileID: 0}
