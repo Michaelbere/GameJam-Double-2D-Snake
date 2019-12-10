@@ -8,10 +8,12 @@ public class FruitScript : MonoBehaviour
 
     public float expireTime = 15f;
     protected float expiryCounter = 0f;
+    private int zCoord;
+    
     // Start is called before the first frame update
     protected void Start()
     {
-
+        zCoord = (int)transform.localPosition.y;
     }
 
     // Update is called once per frame
@@ -21,7 +23,7 @@ public class FruitScript : MonoBehaviour
         if (expiryCounter > expireTime)
         {
             expiryCounter = 0;
-            getNewLocation(1);
+            getNewLocation(zCoord);
         }
     }
 
@@ -36,7 +38,7 @@ public class FruitScript : MonoBehaviour
         {
 //            Debug.Log("Eated");
             expiryCounter = 0;
-            getNewLocation(1);
+            getNewLocation(zCoord);
         }
     }
 }

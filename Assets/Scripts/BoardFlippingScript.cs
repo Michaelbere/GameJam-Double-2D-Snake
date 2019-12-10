@@ -67,7 +67,7 @@ public class BoardFlippingScript : MonoBehaviour
 
     private void newBomb()
     {
-        Debug.Log("create new bomb");
+//        Debug.Log("create new bomb");
         /* TODO finish initialization of bomb -> the starting location vector is not relevant only it's y value is 
         important to set because it doesnt change and this is the way to set which plane the pickup is on
         (-1) for dark plane, (1) for sunny*/
