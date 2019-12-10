@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class BoardTileGenerator : MonoBehaviour
 {
 
     public SnakeBodyScript snakeHead;
+    public Transform renderingOffseter;
 
     private int[,] map;
 
@@ -66,6 +68,7 @@ public class BoardTileGenerator : MonoBehaviour
 
     void initMap()
     {
+        renderingOffseter.position = new Vector3(-(boardWidth - 1) / 2, 0, -(boardHeight - 1) / 2);
         map = new int[boardWidth, boardHeight];
         // map init
         for (int row = 0; row < map.GetLength(0); row++)
@@ -86,7 +89,7 @@ public class BoardTileGenerator : MonoBehaviour
         {
             Destroy(transform.GetChild(i).gameObject);
         }
-        // tile creation
+        List<Vector3> centerNodes = new List<Vector3>();
         for (int row = 0; row < map.GetLength(0); row++)
         {
             for (int col = 0; col < map.GetLength(1); col++)
@@ -96,8 +99,24 @@ public class BoardTileGenerator : MonoBehaviour
                     GameObject newTile = Instantiate(Resources.Load("BoardTile")) as GameObject;
                     newTile.transform.parent = this.transform;
                     newTile.transform.localPosition = new Vector3(row, 0, col);
+                    if (Mathf.Abs(row - map.GetLength(0) / 2) < 0.6 && Mathf.Abs(col - map.GetLength(1) / 2) < 0.6)
+                    {
+                        centerNodes.Add(newTile.transform.position);
+                    }
                 }
             }
+        }
+        if (centerNodes.Count != 0)
+        {
+            Vector3 average = new Vector3(centerNodes.Average(a => a.x), centerNodes.Average(a => a.y), centerNodes.Average(a => a.z)) / centerNodes.Count;
+            Camera mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+            Vector3 newCameraPosition = new Vector3(average.x, 20, -25);
+            mainCamera.transform.position = newCameraPosition;
+            mainCamera.transform.LookAt(Vector3.zero);
+        }
+        else
+        {
+            Debug.Log("Centering error");
         }
     }
 
