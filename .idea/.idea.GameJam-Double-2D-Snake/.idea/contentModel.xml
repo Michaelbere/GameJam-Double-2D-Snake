@@ -27,6 +27,7 @@
           <e p="BombScript.cs" t="Include" />
           <e p="ColorChanger.cs" t="Include" />
           <e p="DryAirController.cs" t="Include" />
+          <e p="EditorUpdaterScript.cs" t="Include" />
           <e p="EventManager.cs" t="Include" />
           <e p="FruitScript.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
@@ -62,6 +63,9 @@
           <e p="Sprites" t="Include">
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
+        </e>
+        <e p="WaterShader" t="Include">
+          <e p="OceanWater.shader" t="Include" />
         </e>
       </e>
       <e p="GameJam-Double-2D-Snake.sln" t="IncludeFlat" />
