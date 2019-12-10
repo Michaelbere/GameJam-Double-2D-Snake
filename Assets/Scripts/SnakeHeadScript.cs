@@ -81,7 +81,7 @@ public class SnakeHeadScript : SnakeBodyScript
     {
         yield return new WaitForSeconds(delay);
         flip = Flip.NO_FLIP;
-        GameManager.Instance.ContinueRunning();
+        EventManager.StopFlip();
     }
 
     IEnumerator DelayedMove(Vector3[] newPositions, float delay)
@@ -176,7 +176,7 @@ public class SnakeHeadScript : SnakeBodyScript
                     //EventManager.DoFlip();
 
                     //TODO: Delegate this
-                    GameManager.Instance.Flip();
+                    EventManager.EnterFlip();
                     // Erez here, would like gamemanager to change to flipping state when a flip starts
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     Vector3[] positionSteps = calculatePositionSteps(newPosition, flip, flipType);

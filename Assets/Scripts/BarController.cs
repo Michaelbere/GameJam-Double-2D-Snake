@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +12,9 @@ public class BarController : MonoBehaviour
     private Image _barImage;
 
     private BarLogic _barLogic;
-
+    private bool _flashing = false;
     private const float WarningPercentage = 0.3f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,8 +24,17 @@ public class BarController : MonoBehaviour
         GameManager.Instance.Activate();
     }
 
+    private void OnEnable()
+    {
+//        EventManager.FlipProcedure += 
+    }
+
     // Update is called once per frame
     void Update()
+    {
+    }
+
+    private void ChangeFillDirection()
     {
     }
 
@@ -33,13 +44,26 @@ public class BarController : MonoBehaviour
         _barLogic.UpdateAmount(increase);
         var currPercentFilled = _barLogic.GetNormalizedAmount();
         _barImage.fillAmount = currPercentFilled;
-        //If the percentage is below 30% and going down
+        //If the percentage is below 30% and going down and not already flashing
         //So as to not flash while on the wrong side
-        if (currPercentFilled <= WarningPercentage && !increase)
+        //TODO: Fix this to only be called once!
+        if (currPercentFilled <= WarningPercentage && !increase && !_flashing)
         {
+            _flashing = true;
             EventManager.ChangeColors();
         }
+
+        // If increasing, prevent flashing
+        if (increase)
+        {
+            _flashing = false;
+        }
+        if (currPercentFilled <= 0)
+        {
+            EventManager.ResetGame();
+        }
     }
+
     /// <summary>
     /// Class Implementing the logic of a Bar.
     /// </summary>
@@ -87,4 +111,3 @@ public class BarController : MonoBehaviour
         }
     }
 }
-
