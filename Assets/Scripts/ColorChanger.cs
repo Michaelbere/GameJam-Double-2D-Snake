@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,12 @@ public class ColorChanger : MonoBehaviour
     private void StopFlashing()
     {
         _flashing = false;
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.ColorChanges -= FlashColors;
+        EventManager.FlipProcedure -= StopFlashing;   
     }
 
     private void FlashColors()

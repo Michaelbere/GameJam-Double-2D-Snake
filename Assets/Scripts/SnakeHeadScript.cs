@@ -184,6 +184,11 @@ public class SnakeHeadScript : SnakeBodyScript
         setScoreText();
     }
 
+    private void OnDestroy()
+    {
+        EventManager.ResetProcedure -= Death;
+    }
+
     // Update is called once per frame
     void Update()
     {

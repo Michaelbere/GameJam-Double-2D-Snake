@@ -21,21 +21,6 @@ public class BarController : MonoBehaviour
     {
         _barImage = transform.GetComponent<Image>();
         _barLogic = new BarLogic(_barImage.fillAmount);
-        GameManager.Instance.Activate();
-    }
-
-    private void OnEnable()
-    {
-//        EventManager.FlipProcedure += 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    private void ChangeFillDirection()
-    {
     }
 
     public void UpdateBar(bool increase)
