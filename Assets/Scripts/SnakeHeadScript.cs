@@ -49,6 +49,10 @@ public class SnakeHeadScript : SnakeBodyScript
 
     private int verticalMultiplier = 1;
     private int horizontalMultiplier = 1;
+    
+    public void death(){
+        snakeSpeed = 10^6;
+    }
 
     (Flip, FlipType) calculateFlip(Vector3 newPosition)
     {
@@ -150,6 +154,7 @@ public class SnakeHeadScript : SnakeBodyScript
     void Start()
     {
         snakeMoveTimer = snakeSpeed;
+        EventManager.ResetProcedure += death;
         setScoreText();
     }
 
