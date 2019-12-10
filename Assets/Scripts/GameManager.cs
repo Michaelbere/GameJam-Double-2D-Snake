@@ -21,21 +21,8 @@ public class GameManager : Singleton<GameManager>
     }
     // ================================ Score Handling ================================ //
 
-    public void IncrementScore()
+    public void UpdateScore(int newScore)
     {
-        _score++;
+        _score = newScore;
     }
-
-    public void ResetScore()
-    {
-        _score = 0;
-    }
-
-    public int GetScore()
-    {
-        return _score;
-    }
-    
-    
-    
 }

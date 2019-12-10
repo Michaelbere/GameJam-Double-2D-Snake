@@ -112,7 +112,7 @@ public class BoardTileGenerator : MonoBehaviour
         {
             Vector3 average = new Vector3(centerNodes.Average(a => a.x), centerNodes.Average(a => a.y), centerNodes.Average(a => a.z)) / centerNodes.Count;
             Camera mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-            Vector3 newCameraPosition = new Vector3(average.x, 20, -25);
+            Vector3 newCameraPosition = new Vector3(average.x, 21.5f * 0.8f, -34.67f * 0.8f);
             mainCamera.transform.position = newCameraPosition;
             mainCamera.transform.LookAt(Vector3.zero);
         }

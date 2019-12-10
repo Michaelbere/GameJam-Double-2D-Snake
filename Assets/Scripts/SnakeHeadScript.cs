@@ -6,13 +6,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using Quaternion = System.Numerics.Quaternion;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class SnakeHeadScript : SnakeBodyScript
 {
     [Range(0.1f, 2)] public float snakeSpeed = 0.5f;
     public Transform board;
-    public TextMeshProUGUI GameoverText;
+
     public BoardTileGenerator boardTileGenerator;
     public TextMeshProUGUI scoreText;
     private int score = 0;
@@ -50,15 +49,10 @@ public class SnakeHeadScript : SnakeBodyScript
 
     private int verticalMultiplier = 1;
     private int horizontalMultiplier = 1;
-
-    private void Death()
-    {
-        GameoverText.gameObject.SetActive(true);
-        GameoverText.text = "You Scored: " + score;
-
-        StartCoroutine(GameOverDelay());
+    
+    public void death(){
+        snakeSpeed = 10^6;
     }
-
 
     (Flip, FlipType) calculateFlip(Vector3 newPosition)
     {
@@ -66,7 +60,6 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             return (newPosition.y > 0 ? Flip.LEFT : Flip.RIGHT, FlipType.WALL);
         }
-
         if (newPosition.x >= boardTileGenerator.getWidth())
         {
             return (newPosition.y < 0 ? Flip.LEFT : Flip.RIGHT, FlipType.WALL);
@@ -76,17 +69,13 @@ public class SnakeHeadScript : SnakeBodyScript
         {
             return (newPosition.y > 0 ? Flip.DOWN : Flip.UP, FlipType.WALL);
         }
-
         if (newPosition.z >= boardTileGenerator.getHeight())
         {
             return (newPosition.y < 0 ? Flip.DOWN : Flip.UP, FlipType.WALL);
         }
-
         if (boardTileGenerator.isHole(newPosition))
         {
-            return (
-                (realDirection == PlayerDirection.UP || realDirection == PlayerDirection.DOWN) ? Flip.RIGHT : Flip.DOWN,
-                FlipType.HOLE);
+            return ((realDirection == PlayerDirection.UP || realDirection == PlayerDirection.DOWN) ? Flip.RIGHT : Flip.DOWN, FlipType.HOLE);
         }
 
         return (Flip.NO_FLIP, FlipType.WALL);
@@ -111,18 +100,11 @@ public class SnakeHeadScript : SnakeBodyScript
         }
     }
 
-    IEnumerator GameOverDelay()
-    {
-        Time.timeScale = .0000001f;
-        yield return new WaitForSeconds(3 * Time.timeScale);
-        Time.timeScale = 1.0f;
-        SceneManager.LoadScene("Scenes/Menu");
-    }
-
     Vector3[] calculatePositionSteps(Vector3 newPosition, Flip flip, FlipType flipType)
     {
         if (flipType == FlipType.WALL)
         {
+
             Vector3[] answer = new Vector3[4];
             answer[0] = newPosition;
             answer[1] = Vector3.Scale(newPosition, Vector3.forward + Vector3.right);
@@ -138,7 +120,6 @@ public class SnakeHeadScript : SnakeBodyScript
                     answer[3] = answer[2] + (answer[2].z < 0 ? Vector3.forward : Vector3.back);
                     break;
             }
-
             return answer;
         }
         else
@@ -150,28 +131,21 @@ public class SnakeHeadScript : SnakeBodyScript
             {
                 case Flip.LEFT:
                 case Flip.RIGHT:
-                    answer[2] = answer[1] + verticalMultiplier *
-                                (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
-                    answer[3] = answer[2] + verticalMultiplier *
-                                (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[2] = answer[1] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[3] = answer[2] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
                     answer[4] = answer[3] + Vector3.Scale(newPosition, Vector3.down);
-                    answer[5] = answer[4] + verticalMultiplier *
-                                (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
+                    answer[5] = answer[4] + verticalMultiplier * (realDirection == PlayerDirection.UP ? Vector3.forward : Vector3.back);
                     break;
                 case Flip.UP:
                 case Flip.DOWN:
-                    answer[2] = answer[1] + horizontalMultiplier *
-                                (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
-                    answer[3] = answer[2] + horizontalMultiplier *
-                                (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[2] = answer[1] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[3] = answer[2] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
                     answer[4] = answer[3] + Vector3.Scale(newPosition, Vector3.down);
-                    answer[5] = answer[4] + horizontalMultiplier *
-                                (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
+                    answer[5] = answer[4] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
 
                     // answer[5] = answer[4] + horizontalMultiplier * (realDirection == PlayerDirection.RIGHT ? Vector3.right : Vector3.left);
                     break;
             }
-
             return answer;
         }
     }
@@ -180,13 +154,8 @@ public class SnakeHeadScript : SnakeBodyScript
     void Start()
     {
         snakeMoveTimer = snakeSpeed;
-        EventManager.ResetProcedure += Death;
+        EventManager.ResetProcedure += death;
         setScoreText();
-    }
-
-    private void OnDestroy()
-    {
-        EventManager.ResetProcedure -= Death;
     }
 
     // Update is called once per frame
@@ -196,14 +165,13 @@ public class SnakeHeadScript : SnakeBodyScript
         HandleInput();
         if (snakeMoveTimer < 0)
         {
-//            realDirection = newDirection;
+            realDirection = newDirection;
             snakeMoveTimer += snakeSpeed; // check that this doesnt fail in any way
-            //(the idea is that if it is too low the
-            //time passed will go on to the next cycle
-            // to keep cycle length consistant)
+                                          //(the idea is that if it is too low the
+                                          //time passed will go on to the next cycle
+                                          // to keep cycle length consistant)
             if (flip == Flip.NO_FLIP)
             {
-                realDirection = newDirection;
                 Vector3 newPosition = GetNewPosition();
                 FlipType flipType;
                 (flip, flipType) = calculateFlip(newPosition);
@@ -214,12 +182,13 @@ public class SnakeHeadScript : SnakeBodyScript
 
                     //TODO: Delegate this
                     EventManager.EnterFlip();
-                    
+                    // Erez here, would like gamemanager to change to flipping state when a flip starts
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     Vector3[] positionSteps = calculatePositionSteps(newPosition, flip, flipType);
                     ChangeMovementDirection();
                     StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
                     StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
+                    // Erez here, would like gamemanager to change back to running state after a flip is finished
                 }
                 else
                 {
@@ -237,16 +206,14 @@ public class SnakeHeadScript : SnakeBodyScript
         if (target.gameObject.CompareTag("Fruit"))
         {
             score += 1;
-            GameManager.Instance.IncrementScore();
             didEat = true;
             setScoreText();
         }
 
         if (target.gameObject.CompareTag("Body") || target.gameObject.CompareTag("Bomb"))
         {
-//            Debug.Log("Dead");
-//            Time.timeScale = 0f;
-            EventManager.ResetGame();
+            Debug.Log("Dead");
+            Time.timeScale = 0f;
         }
     }
 

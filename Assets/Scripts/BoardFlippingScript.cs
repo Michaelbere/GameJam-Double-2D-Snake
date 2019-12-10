@@ -25,6 +25,7 @@ public class BoardFlippingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RenderSettings.skybox.SetFloat("_Rotation", Time.time * 1.5f);
         if (!isSunnySideUp())
         {
             newBombCounter += Time.deltaTime;
