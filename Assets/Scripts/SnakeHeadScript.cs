@@ -12,7 +12,7 @@ public class SnakeHeadScript : SnakeBodyScript
 {
     [Range(0.1f, 2)] public float snakeSpeed = 0.5f;
     public Transform board;
-
+    public TextMeshProUGUI GameoverText;
     public BoardTileGenerator boardTileGenerator;
     public TextMeshProUGUI scoreText;
     private int score = 0;
@@ -51,10 +51,12 @@ public class SnakeHeadScript : SnakeBodyScript
     private int verticalMultiplier = 1;
     private int horizontalMultiplier = 1;
 
-    public void death()
+    private void Death()
     {
-//        snakeSpeed = 10^6
-        SceneManager.LoadScene("Scenes/Menu");
+        GameoverText.gameObject.SetActive(true);
+        GameoverText.text = "You Scored: " + score;
+
+        StartCoroutine(GameOverDelay());
     }
 
 
@@ -107,6 +109,14 @@ public class SnakeHeadScript : SnakeBodyScript
             //            Debug.Log(newPositions[i]);
             yield return new WaitForSeconds(delay);
         }
+    }
+
+    IEnumerator GameOverDelay()
+    {
+        Time.timeScale = .0000001f;
+        yield return new WaitForSeconds(3 * Time.timeScale);
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene("Scenes/Menu");
     }
 
     Vector3[] calculatePositionSteps(Vector3 newPosition, Flip flip, FlipType flipType)
@@ -170,7 +180,7 @@ public class SnakeHeadScript : SnakeBodyScript
     void Start()
     {
         snakeMoveTimer = snakeSpeed;
-        EventManager.ResetProcedure += death;
+        EventManager.ResetProcedure += Death;
         setScoreText();
     }
 

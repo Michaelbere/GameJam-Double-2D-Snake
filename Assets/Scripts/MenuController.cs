@@ -22,6 +22,7 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
+//        Time.timeScale = 1;
         scoreText.text = "Score: " + GameManager.Instance.GetScore();
         // Reset the score for the new game
         GameManager.Instance.ResetScore();
