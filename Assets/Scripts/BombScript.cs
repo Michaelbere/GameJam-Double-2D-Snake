@@ -18,7 +18,6 @@ public class BombScript : FruitScript
         // if (countTime){Debug.Log(expiryCounter-expireTime);}
         if (expiryCounter > expireTime)
         {
-            expireTime += expireTime >= 6 ? -2 : 2;
             expiryCounter = 0;
             getNewLocation(-1);
         }
