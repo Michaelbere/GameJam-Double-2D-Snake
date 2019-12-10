@@ -21,39 +21,45 @@ public class ColorChanger : MonoBehaviour
     private void OnDestroy()
     {
         EventManager.ColorChanges -= FlashColors;
-        EventManager.FlipProcedure -= StopFlashing;   
+        EventManager.FlipProcedure -= StopFlashing;
     }
 
     private void FlashColors()
     {
         var meshRenderers = GetComponentsInChildren<MeshRenderer>();
-        Debug.Log("Called FlashColors");
-        //MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
         Color original = meshRenderers[0].material.color; // Assumes all materials are the same!
         Color newColor = GetNewColor(original);
         float flashTime = 0.5f; // Half a second between color changes
         _flashing = true;
         // Flash all children
-        foreach (var meshRenderer in meshRenderers)
-        {
-            StartCoroutine(Flash(meshRenderer, original, newColor, flashTime));
-        }
+//        foreach (var meshRenderer in meshRenderers)
+//        {
+//            StartCoroutine(Flash(meshRenderer, original, newColor, flashTime));
+//        }
+        StartCoroutine(Flash(original, newColor, flashTime));
     }
 
-    IEnumerator Flash(MeshRenderer meshRenderer, Color original, Color newColor, float flashTime)
+    IEnumerator Flash(Color original, Color newColor, float flashTime)
     {
         // Set the new color to flash to
         Color flashColor = newColor;
         while (_flashing)
         {
-            Debug.Log("changed");
-            meshRenderer.material.color = flashColor;
+            foreach (var meshRenderer in GetComponentsInChildren<MeshRenderer>())
+            {
+                meshRenderer.material.color = flashColor;
+            }
+
             yield return new WaitForSeconds(flashTime);
             //Change the color to change to between flashes
             flashColor = flashColor == original ? newColor : original;
         }
+
         // Change the color back to the original
-        meshRenderer.material.color = original;
+        foreach (var meshRenderer in GetComponentsInChildren<MeshRenderer>())
+        {
+            meshRenderer.material.color = flashColor;
+        }
     }
 
     /// <summary>

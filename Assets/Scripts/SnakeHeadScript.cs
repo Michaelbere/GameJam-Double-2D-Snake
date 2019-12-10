@@ -196,13 +196,14 @@ public class SnakeHeadScript : SnakeBodyScript
         HandleInput();
         if (snakeMoveTimer < 0)
         {
-            realDirection = newDirection;
+//            realDirection = newDirection;
             snakeMoveTimer += snakeSpeed; // check that this doesnt fail in any way
             //(the idea is that if it is too low the
             //time passed will go on to the next cycle
             // to keep cycle length consistant)
             if (flip == Flip.NO_FLIP)
             {
+                realDirection = newDirection;
                 Vector3 newPosition = GetNewPosition();
                 FlipType flipType;
                 (flip, flipType) = calculateFlip(newPosition);
@@ -213,13 +214,12 @@ public class SnakeHeadScript : SnakeBodyScript
 
                     //TODO: Delegate this
                     EventManager.EnterFlip();
-                    // Erez here, would like gamemanager to change to flipping state when a flip starts
+                    
                     board.GetComponent<BoardFlippingScript>().flip(flip, snakeSpeed * 3);
                     Vector3[] positionSteps = calculatePositionSteps(newPosition, flip, flipType);
                     ChangeMovementDirection();
                     StartCoroutine(DelayedMove(positionSteps, snakeSpeed));
                     StartCoroutine(DelayedResetFlip(snakeSpeed * (positionSteps.Length - 1)));
-                    // Erez here, would like gamemanager to change back to running state after a flip is finished
                 }
                 else
                 {
