@@ -43,7 +43,7 @@ public class ColorChanger : MonoBehaviour
     {
         // Set the new color to flash to
         Color flashColor = newColor;
-        while (_flashing)
+        while (_flashing || flashColor != original)
         {
             foreach (var meshRenderer in GetComponentsInChildren<MeshRenderer>())
             {
